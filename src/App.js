@@ -18,13 +18,13 @@ function App() {
   const [initialPosition, setInitialPosition] = useState(null);
   const [lastClicked, setLastClicked] = useState(null);
   const [drag, setDrag] = useState({ isDragging: false, dragging: null });
+  const [dragged, setDragged] = useState(false);
   const isDraggingRef = useRef(isDragging);
   const draggingRef = useRef(dragging);
   const lastClickedRef = useRef(lastClicked);
   const notesRef = useRef(notes);
+  const draggedRef = useRef(dragged);
   useEffect(() => {
-    console.log(drag.isDragging);
-    console.log(drag.dragging);
     window.addEventListener("mousemove", (e) => {
       handleMove(e);
     });
@@ -41,7 +41,15 @@ function App() {
 
     // Create a new note object with an id, position, styles, title, and body
     const note = {
-      component: <Note id={notes.length} title={modalTitle} body={modalBody} />,
+      component: (
+        <Note
+          id={notes.length}
+          initialTitle={modalTitle}
+          initialBody={modalBody}
+          draggingRef={draggingRef}
+          draggedRef={draggedRef}
+        />
+      ),
       id: notes.length,
       styles: {
         left: initialX,
@@ -58,8 +66,6 @@ function App() {
   const handleMove = (e) => {
     if (isDraggingRef.current) {
       const note = notesRef.current[draggingRef.current];
-      console.log(draggingRef.current);
-      console.log(note);
       // Create a new object to store the updated position
       const dx = e.clientX - lastClickedRef.current.x;
       const dy = e.clientY - lastClickedRef.current.y;
@@ -82,6 +88,8 @@ function App() {
       ];
       setLastClicked({ x: e.clientX, y: e.clientY });
       lastClickedRef.current = { x: e.clientX, y: e.clientY };
+      draggedRef.current = true;
+      setDragged(true);
       requestAnimationFrame(() => handleMove(e, note));
     }
   };
@@ -103,9 +111,11 @@ function App() {
     setIsDragging(false);
     setDragging(null);
     setLastClicked(null);
+    setDragged(false);
     isDraggingRef.current = false;
     draggingRef.current = null;
     lastClickedRef.current = null;
+    draggedRef.current = false;
   };
 
   return (

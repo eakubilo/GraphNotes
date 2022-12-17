@@ -16,7 +16,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 //  positionX: int,
 //  positionY: int
 //}
-function Note({ initialTitle, initialBody }) {
+function Note({ id, initialTitle, initialBody, draggingRef, draggedRef }) {
   const [currTitle, setTitle] = useState(initialTitle);
   const [currBody, setBody] = useState(initialBody);
   const [modalTitle, setModalTitle] = useState(initialTitle);
@@ -45,9 +45,7 @@ function Note({ initialTitle, initialBody }) {
           ref={positionRef}
           className="noteWrapper"
           onMouseDown={() => setLastDown(+new Date())}
-          onMouseUp={() =>
-            +new Date() - lastDown < 200 ? handleShow() : void 0
-          }
+          onMouseUp={() => (!draggedRef.current ? handleShow() : void 0)}
           onClick={() => console.log(positionRef)}
         >
           <Card.Body>
