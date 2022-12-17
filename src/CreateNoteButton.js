@@ -2,23 +2,15 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import React, { useState } from "react";
-import Note from "./Note";
-
-function CreateNoteButton() {
-  const [notes, setNotes] = useState([]);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalBody, setModalBody] = useState("");
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleSaveAndClose = () => {
-    setNotes([
-      ...notes,
-      <Note key={notes.length} title={modalTitle} body={modalBody} />,
-    ]);
-    handleClose();
-  };
+import React from "react";
+function CreateNoteButton({
+  handleShow,
+  handleClose,
+  handleSaveAndClose,
+  show,
+  setModalBody,
+  setModalTitle,
+}) {
   const handleChange = (setter) => (e) => {
     e.preventDefault(); // prevent the default action
     setter(e.target.value); // set name to e.target.value (event)
@@ -33,7 +25,6 @@ function CreateNoteButton() {
       >
         Create Note
       </Button>
-      {notes}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>

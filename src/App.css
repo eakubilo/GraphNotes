@@ -8,3 +8,7 @@
 .dragWrapper {
   margin: 0px;
 }
+.Note{
+  cursor: pointer;
+  position: absolute;
+}

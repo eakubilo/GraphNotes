@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Card from "react-bootstrap/Card";
 import Draggable from "react-draggable"; // The default
 import Modal from "react-bootstrap/Modal";
@@ -7,12 +7,20 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 
 //A note is a card + a hidden modal
-
-function Note({ title, body }) {
-  const [currTitle, setTitle] = useState(title);
-  const [currBody, setBody] = useState(body);
-  const [modalTitle, setModalTitle] = useState(title);
-  const [modalBody, setModalBody] = useState(body);
+//App.js sets a note's initial content state
+//Every note in general controls its own contents and modal
+//App.js controls a note's position state in general
+//type noteProps = {
+//  initialTitle: String,
+//  initialBody: String,
+//  positionX: int,
+//  positionY: int
+//}
+function Note({ initialTitle, initialBody }) {
+  const [currTitle, setTitle] = useState(initialTitle);
+  const [currBody, setBody] = useState(initialBody);
+  const [modalTitle, setModalTitle] = useState(initialTitle);
+  const [modalBody, setModalBody] = useState(initialBody);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -21,32 +29,33 @@ function Note({ title, body }) {
     setBody(modalBody);
     setShow(false);
   };
+  const positionRef = useRef(null);
   const [lastDown, setLastDown] = useState(0);
 
   const handleChange = (setter) => (e) => {
     e.preventDefault(); // prevent the default action
-    setter(e.target.value); // set name to e.target.value (event)
+    setter(e.target.value);
   };
 
   //We need a modal
   return (
     <>
-      <Draggable className="dragWrapper">
-        <Card style={{ width: "18rem" }}>
-          <div
-            className="noteWrapper"
-            onMouseDown={() => setLastDown(+new Date())}
-            onMouseUp={() =>
-              +new Date() - lastDown < 200 ? handleShow() : void 0
-            }
-          >
-            <Card.Body>
-              <Card.Title>{currTitle}</Card.Title>
-              <Card.Text>{currBody}</Card.Text>
-            </Card.Body>
-          </div>
-        </Card>
-      </Draggable>
+      <Card style={{ width: "18rem" }}>
+        <div
+          ref={positionRef}
+          className="noteWrapper"
+          onMouseDown={() => setLastDown(+new Date())}
+          onMouseUp={() =>
+            +new Date() - lastDown < 200 ? handleShow() : void 0
+          }
+          onClick={() => console.log(positionRef)}
+        >
+          <Card.Body>
+            <Card.Title>{currTitle}</Card.Title>
+            <Card.Text>{currBody}</Card.Text>
+          </Card.Body>
+        </div>
+      </Card>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
