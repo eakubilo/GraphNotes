@@ -14,3 +14,4 @@ A note taking app idea.
 - [ ] delete summaries
 3. 
 - [ ] put notes in a toolbox
+- [ ] latex support
